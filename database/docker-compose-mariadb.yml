@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  nestjs-auth-db-local:
+    container_name: nestjs-auth-db-local
+    hostname: nestjs-auth-db-local
+    image: mariadb:10.5
+    ports:
+      - 3360:3306
+    volumes:
+      # - ./database/db/conf.d:/etc/mysql/conf.d
+      - ./data:/var/lib/mysql
+      # - ./database/db/initdb.d:/docker-entrypoint-initdb.d
+    deploy:
+      mode: replicated
+      replicas: 1
+    # env_file: ./database/.env
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_USER: user1234
+      MYSQL_PASSWORD: user1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    restart: always
+    # networks:
+    #   - default
+    #   - nestjs-auth-net

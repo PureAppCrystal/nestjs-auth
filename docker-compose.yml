@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  # database
+  nestjs-auth-db:
+    container_name: nestjs-auth-db
+    hostname: nestjs-auth-db
+    image: mariadb:10.5
+    ports:
+      - 3360:3306
+    volumes:
+      # - ./database/db/conf.d:/etc/mysql/conf.d
+      - ./database/data:/var/lib/mysql
+      # - ./database/db/initdb.d:/docker-entrypoint-initdb.d
+    deploy:
+      mode: replicated
+      replicas: 1
+    # env_file: ./database/.env
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_USER: user1234
+      MYSQL_PASSWORD: user1234
+     command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    restart: always
+    networks:
+      - default
+      - nestjs-auth-net
+  # was
+  nestjs-auth-was:
+    container_name: nestjs-auth-was
+    hostname: nestjs-auth-was
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # image: docker-nestjs-auth-was:0.0.1
+    ports:
+      - 18089:18089
+    # volumes:
+    restart: always
+    depends_on:
+      - nestjs-auth-db
+    networks:
+      - default
+      - nestjs-auth-net
+
+networks:
+  nestjs-auth-net:
+    driver: bridge
