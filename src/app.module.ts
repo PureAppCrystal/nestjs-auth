@@ -8,6 +8,7 @@ import { UserController } from './user/user.controller';
 // import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { Connection } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 
 const envConfig = ConfigModule.forRoot({
   isGlobal: true,
@@ -26,7 +27,7 @@ const typeOrm = TypeOrmModule.forRoot({
 });
 
 @Module({
-  imports: [envConfig, typeOrm, UserModule],
+  imports: [envConfig, typeOrm, UserModule, AuthModule],
   controllers: [AppController, UserController],
   providers: [AppService],
 })

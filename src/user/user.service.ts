@@ -26,11 +26,11 @@ export class UserService {
       });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     createUserDto.password = await bcrypt.hash(
       createUserDto.password,
       bcryptContants.saltOrRounds,
     );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } =
       await this.userRepository.save(createUserDto);
     return result;
@@ -46,6 +46,12 @@ export class UserService {
     return this.userRepository.findOne({
       where: { userId: id },
       select: ['seq', 'userId', 'userName', 'role'],
+    });
+  }
+
+  findOneForLogin(id: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: { userId: id },
     });
   }
 }
