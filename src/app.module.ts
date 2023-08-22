@@ -5,8 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import dbConfig from './config/db.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
+// import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
+import { Connection } from 'typeorm';
 
 const envConfig = ConfigModule.forRoot({
   isGlobal: true,
@@ -19,6 +20,7 @@ const typeOrm = TypeOrmModule.forRoot({
   port: parseInt(process.env.DB_PORT),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: ['dist/**/*.entity{.ts,.js}'],
   synchronize: true,
 });
@@ -26,6 +28,8 @@ const typeOrm = TypeOrmModule.forRoot({
 @Module({
   imports: [envConfig, typeOrm, UserModule],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
